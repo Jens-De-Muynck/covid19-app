@@ -72,7 +72,7 @@
                 console.log("RESET PASSWORD")
             },
             logOut() {
-                console.log("LOG OUT")
+                this.$navigateTo(App);
             }
         },
         components: {

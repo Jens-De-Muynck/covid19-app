@@ -46,23 +46,29 @@
                             <Image src="~/assets/images/heart-true.png" stretch="aspectFit" width="100px"></Image>
                         </FlexboxLayout>
 
-                        <FlexboxLayout class="data-list" flexDirection="column" justifyContent="space-between">
-                            <FlexboxLayout class="data-item" flexDirection="column">
-                                <Label text="Cases"></Label>
-                                <Image  src="https://image-charts.com/chart?chco=0077CC&chd=t%3A27%2C25%2C60%2C31%2C25%2C39%2C25%2C31%2C26%2C28%2C80%2C28%2C27%2C31%2C27%2C29%2C26%2C35%2C70%2C25&chs=700x125&cht=ls" 
-                                        stretch="aspectFit" />
+                        <FlexboxLayout class="data-list" flexDirection="column">
+                            <FlexboxLayout class="data-item">
+                                <Image src="~/assets/images/menu.png" width="80px" class="country-flag"></Image>
+                                <Label text="Belgium" class="country-name"></Label>
+                                <Image src="~/assets/images/back-arrow.png" width="30px" class="country-arrow"></Image>
                             </FlexboxLayout>
 
-                            <FlexboxLayout class="data-item" flexDirection="column">
-                                <Label text="Deaths"></Label>
-                                <Image  src="https://image-charts.com/chart?chco=0077CC&chd=t%3A27%2C25%2C60%2C31%2C25%2C39%2C25%2C31%2C26%2C28%2C80%2C28%2C27%2C31%2C27%2C29%2C26%2C35%2C70%2C25&chs=700x125&cht=ls" 
-                                        stretch="aspectFit" />
+                            <FlexboxLayout class="data-item">
+                                <Image src="~/assets/images/menu.png" width="80px" class="country-flag"></Image>
+                                <Label text="Belgium" class="country-name"></Label>
+                                <Image src="~/assets/images/back-arrow.png" width="30px" class="country-arrow"></Image>
                             </FlexboxLayout>
-                            
-                            <FlexboxLayout class="data-item" flexDirection="column">
-                                <Label text="Recovered"></Label>
-                                <Image  src="https://image-charts.com/chart?chco=0077CC&chd=t%3A27%2C25%2C60%2C31%2C25%2C39%2C25%2C31%2C26%2C28%2C80%2C28%2C27%2C31%2C27%2C29%2C26%2C35%2C70%2C25&chs=700x125&cht=ls" 
-                                        stretch="aspectFit" />
+
+                            <FlexboxLayout class="data-item">
+                                <Image src="~/assets/images/menu.png" width="80px" class="country-flag"></Image>
+                                <Label text="Belgium" class="country-name"></Label>
+                                <Image src="~/assets/images/back-arrow.png" width="30px" class="country-arrow"></Image>
+                            </FlexboxLayout>
+
+                            <FlexboxLayout class="data-item">
+                                <Image src="~/assets/images/menu.png" width="80px" class="country-flag"></Image>
+                                <Label text="Belgium" class="country-name"></Label>
+                                <Image src="~/assets/images/back-arrow.png" width="30px" class="country-arrow"></Image>
                             </FlexboxLayout>
                         </FlexboxLayout>
                     </FlexboxLayout>
@@ -103,7 +109,7 @@
                 console.log("ABOUT")
             },
             logOut(){
-                console.log("LOG OUT")
+                this.$navigateTo(App);
             },
             gotoWebWHO() {
                 const utilsModule = require("tns-core-modules/utils/utils");
@@ -179,7 +185,24 @@
     }
 
     .data-item{
-        font-size: 30rem;
+        background-color: rgba(0, 0, 0, 0.25);
+        display: flex;
+        align-items: center;
+        font-size: 24rem;
+        padding: 20px 35px;
+        margin-bottom: 30px;
+    }
+
+    .country-flag{
+    }
+
+    .country-name{
+        flex: 1;
+        padding-left: 30px;
+    }
+
+    .country-arrow{
+        transform: rotate(180deg);
     }
 
     .dashed-line{

@@ -133,7 +133,7 @@
                 console.log("ABOUT")
             },
             logOut(){
-                console.log("LOG OUT")
+                this.$navigateTo(App);
             },
             gotoWebWHO() {
                 const utilsModule = require("tns-core-modules/utils/utils");
