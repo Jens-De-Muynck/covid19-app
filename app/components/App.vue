@@ -1,0 +1,142 @@
+<template>
+    <Page actionBarHidden="true">
+
+        <RadSideDrawer ref="drawer">
+            <StackLayout ~drawerContent backgroundColor="#ffffff">
+                <Label class="drawer-header" text="Drawer"/>
+
+                <Label class="drawer-item" text="Item 1"/>
+                <Label class="drawer-item" text="Item 2"/>
+                <Label class="drawer-item" text="Item 3"/>
+            </StackLayout>
+
+            <FlexboxLayout backgroundColor="#1A223F" flexDirection="column" ~mainContent>
+                
+                <GridLayout rows="*, auto, auto">
+                    <FlexboxLayout alignItems="flex-start">
+                        <Image src="~/assets/images/bg-shape.png" iosOverflowSafeArea="true" stretch="aspectFit" width="100%" rowSpan="3"></Image>
+                    </FlexboxLayout>
+
+                    <FlexboxLayout class="content" flexDirection="column" justifyContent="space-between" alignItems="center">
+                        <StackLayout class="title">
+                            <Label text="Hello there," />
+                            <Label text="welcome back" />
+                        </StackLayout>
+
+                        <FlexboxLayout class="login-form" flexDirection="column">
+                            <TextField class="login-email" :text="textFieldValue" hint="E-mail" autocorrect="false" />
+                            <TextField class="login-password" :text="textFieldValue" hint="Password" autocorrect="false" secure='true'/>
+                            
+                            <Label class="forgot-password" text="Forgot your password?" @tap="forgotPassword()"/>
+                        </FlexboxLayout>
+
+                        <Button class="login-button" text="Sign In" @tap="signIn()"></Button>
+                            
+                        <Label class="has-account" @tap="goToSignup()">
+                            <FormattedString>
+                                <Span text="New here? " />
+                                <Span text="Sign up instead." class="sign-up-instead" />
+                            </FormattedString>
+                        </Label>
+                    </FlexboxLayout>
+                </GridLayout>
+            </FlexboxLayout>
+        </RadSideDrawer>
+    </Page>
+</template>
+
+<script >
+
+    import Signup from '~/screens/Signup.vue'
+    import Settings from '~/screens/Settings.vue'
+    import Overview from '~/screens/Overview.vue'
+    import Timeline from '~/screens/Timeline.vue'
+    import Watchlist from '~/screens/Watchlist.vue'
+    
+    export default {
+        data() {
+            return {
+                
+            }
+        },
+        methods:{
+            goToSignup() {
+                this.$navigateTo(Signup);
+            },
+            forgotPassword() {
+                const utilsModule = require("tns-core-modules/utils/utils");
+                utilsModule.openUrl("https://docs.nativescript.org/core-concepts/utils")
+            },
+            signIn(){
+                console.log('SIGN IN')
+            }
+        },
+        components: {
+            Signup,
+            Settings,
+            Overview,
+            Timeline,
+            Watchlist
+        }
+    }
+</script>
+
+<style scoped>
+    .content{
+        margin: 25% 5% 18% 5%;
+    }
+
+    .title{
+        display: flex;
+        align-self: flex-start;
+        font-family: "Serenity", "Serenity-Medium";
+        font-weight: bold;
+        font-size: 45rem;
+    }
+
+    .login-form{
+        width: 100%;
+    }
+
+    .login-form *{
+        font-size: 20rem;
+        margin: 20px 0;
+    }
+
+    .forgot-password{
+        color: #929292;
+        text-decoration: underline;
+        display: flex;
+        align-self: flex-end;
+        font-size: 13rem;
+    }
+
+    .login-button{
+        border-radius: 20px;
+        font-size: 20rem;
+        padding: 5% 35%;
+        background-image: linear-gradient(to right, #8537CC, #5B41DC);
+    }
+
+    .has-account{
+        font-size: 15rem;
+    }
+
+    .sign-up-instead{
+        text-decoration: underline;
+    }
+
+    .drawer-header {
+        padding: 50 16 16 16;
+        margin-bottom: 16;
+        background-color: #53ba82;
+        color: #ffffff;
+        font-size: 24;
+    }
+
+    .drawer-item {
+        padding: 8 16;
+        color: #333333;
+        font-size: 16;
+    }
+</style>
