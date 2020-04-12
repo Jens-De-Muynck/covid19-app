@@ -22,16 +22,25 @@
                             <Label text="Get on board" />
                         </StackLayout>
 
-                        <FlexboxLayout class="login-form" flexDirection="column">
-                            <TextField class="login-name" :text="textFieldValue" hint="Name" autocorrect="false" />
-                            <TextField class="login-email" :text="textFieldValue" hint="E-mail" autocorrect="false" />
-                            <TextField class="login-password" :text="textFieldValue" hint="Password" autocorrect="false" secure='true'/>
-                            <TextField class="login-confirm-password" :text="textFieldValue" hint="Confirm Password" autocorrect="false" secure='true'/>
+                        <FlexboxLayout class="signup-form" flexDirection="column">
+                            <Label v-model="signup_error" :text="signup_error" class="signup_error" textWrap="true"/>
+
+                            <TextField class="signup-name" v-model="signup_name" hint="Name" autocorrect="false" />
+                            <TextField class="signup-email" v-model="signup_email" hint="E-mail" autocorrect="false" keyboardType="email" />
+                            <TextField class="signup-password" v-model="signup_password" hint="Password" autocorrect="false" secure='true'/>
+                            <TextField class="signup-confirm-password" v-model="signup_confirm_password" hint="Confirm Password" autocorrect="false" secure='true'/>
                         </FlexboxLayout>
 
-                        <Label textWrap='true' class="TOS" text="By creating an account, you agree to the Terms of Service and Privacy Policy." @tap="goToDetailPage()"/>
+                        <Label textWrap='true' class="TOS">
+                            <FormattedString>
+                                <span>By creating an account, you agree to the </span>
+                                <span class="link">Terms and Conditions</span>
+                                <span> and </span>
+                                <span class="link">Privacy Policy.</span>
+                            </FormattedString>
+                        </Label>
 
-                        <Button class="login-button" text="Sign Up" @tap="signUp()"></Button>
+                        <Button class="signup-button" text="Sign Up" @tap="signUp()"></Button>
                             
                         <Label class="has-account" @tap="goToLogin()" text="I am already a member" />
                     </FlexboxLayout>
@@ -52,14 +61,48 @@
     export default {
         data() {
             return {
-                
+                signup_email: "",
+                signup_password: "",
+                signup_confirm_password: "",
+                signup_name: "",
+                signup_error: ""
             }
         },
         methods:{
             signUp() {
-                console.log('SIGN UP')
-                console.log('UPDATE US')
-                this.$navigateTo(Overview);
+                const firebase = require('nativescript-plugin-firebase')
+                
+                if( this.signup_email != "" && 
+                    this.signup_name != "" && 
+                    this.signup_password != "" && 
+                    this.signup_confirm_password != "" /* Check if all fields are filled */
+                ){
+                    if(this.signup_password == this.signup_confirm_password){ /* Check if passwords match eachother */
+                        return firebase.createUser({
+                            email: this.signup_email,
+                            password: this.signup_password
+                        })
+                        .then(
+                            result => {
+                                console.log("SUCCES: " + JSON.stringify(result))
+                                this.signup_error = ""
+
+                                this.$navigateTo(Overview, {
+                                        props: {
+                                            user: JSON.stringify(result)
+                                        }
+                                    }
+                                )
+                            }
+                        )
+                        .catch(
+                            error => {
+                                console.log("ERROR: " + error)
+                                this.signup_error = error
+                            }
+                        );
+                    }
+                }
             },
             goToLogin(){
                 this.$navigateTo(App);
@@ -88,11 +131,11 @@
         font-size: 45rem;
     }
 
-    .login-form{
+    .signup-form{
         width: 100%;
     }
 
-    .login-form *{
+    .signup-form *{
         font-size: 20rem;
         margin: 20px 0;
     }
@@ -104,7 +147,11 @@
         text-align: center;
     }
 
-    .login-button{
+    .TOS .link{
+        text-decoration: underline;
+    }
+
+    .signup-button{
         border-radius: 20px;
         font-size: 20rem;
         padding: 5% 35%;

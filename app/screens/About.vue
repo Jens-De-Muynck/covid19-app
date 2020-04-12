@@ -23,28 +23,11 @@
                         </FlexboxLayout>
 
                         <StackLayout class="title" marginBottom="50px">
-                            <Label text="Settings" />
+                            <Label text="About" />
                         </StackLayout>
 
-                        <FlexboxLayout class="settings_wrap" flexDirection="column" width="100%">
-                            <FlexboxLayout class="setting" flexDirection="row">
-                                <Label text="Name" class="settings-label"></Label>
-                                <Label text="Jens De Muynck" class="settings-value"></Label>
-                            </FlexboxLayout>
-
-                            <FlexboxLayout class="setting" flexDirection="row">
-                                <Label text="Email" class="settings-label"></Label>
-                                <Label text="demuynck.jens@gmail.com" class="settings-value"></Label>
-                            </FlexboxLayout>
-
-                            <FlexboxLayout class="setting" flexDirection="row">
-                                <Label text="Night Mode" class="settings-label"></Label>
-                                <Switch checked="true" class="settings-value" />
-                            </FlexboxLayout>
-
-                            <Label class="link" text="Reset Password" @tap="resetPassword()"></Label>
-
-                            <Label class="link" text="Log Out" @tap="logOut()"></Label>
+                        <FlexboxLayout class="about_wrap" flexDirection="column" width="100%">
+                            <Label text="This is the about"/>
                         </FlexboxLayout>
                     </FlexboxLayout>
                 </GridLayout>

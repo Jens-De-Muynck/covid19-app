@@ -24,8 +24,9 @@
                         </StackLayout>
 
                         <FlexboxLayout class="login-form" flexDirection="column">
-                            <TextField class="login-email" :text="textFieldValue" hint="E-mail" autocorrect="false" />
-                            <TextField class="login-password" :text="textFieldValue" hint="Password" autocorrect="false" secure='true'/>
+                            <Label v-model="login_error" :text="login_error" class="login_error" textWrap="true"/>
+                            <TextField class="login-email" v-model="login_email" hint="E-mail" autocorrect="false" keyboardType="email" />
+                            <TextField class="login-password" v-model="login_password" hint="Password" autocorrect="false" secure='true'/>
                             
                             <Label class="forgot-password" text="Forgot your password?" @tap="forgotPassword()"/>
                         </FlexboxLayout>
@@ -56,7 +57,9 @@
     export default {
         data() {
             return {
-                
+                login_email: "",
+                login_password: "",
+                login_error: ""
             }
         },
         methods:{
@@ -68,8 +71,38 @@
                 utilsModule.openUrl("https://docs.nativescript.org/core-concepts/utils")
             },
             signIn(){
-                console.log('SIGN IN')
+                const firebase = require('nativescript-plugin-firebase')
+                
+                if(this.login_email != "" && this.login_password != ""){
+                    return firebase.login({
+                        type: firebase.LoginType.PASSWORD,
+                        passwordOptions: {
+                            email: this.login_email,
+                            password: this.login_password
+                        }
+                    })
+                    .then(
+                        result => {
+                            console.log("SUCCES: " + JSON.stringify(result))
+                            this.login_error = ""
+
+                            this.$navigateTo(Overview, {
+                                    props: {
+                                        user: JSON.stringify(result)
+                                    }
+                                }
+                            )
+                        }
+                    )
+                    .catch(
+                        error => {
+                            console.log("ERROR: " + error)
+                            this.login_error = error
+                        }
+                    );
+                }
             }
+            
         },
         components: {
             Signup,
@@ -101,6 +134,11 @@
     .login-form *{
         font-size: 20rem;
         margin: 20px 0;
+    }
+
+    .login_error{
+        font-size: 10rem;
+        color: red;
     }
 
     .forgot-password{

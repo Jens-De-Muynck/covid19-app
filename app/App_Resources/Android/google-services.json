@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "834789360637",
+    "firebase_url": "https://covid19-1e7a0.firebaseio.com",
+    "project_id": "covid19-1e7a0",
+    "storage_bucket": "covid19-1e7a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:834789360637:android:af8887c0d370fcf2240f94",
+        "android_client_info": {
+          "package_name": "howest.jensdemuynck.covid19"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "834789360637-n7123d45usiobhdlphc63bsldt8545v1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3EbNp0xqIPqAea68GgH2O8216zu38QC4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "834789360637-n7123d45usiobhdlphc63bsldt8545v1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "834789360637-v8e48ofbg9e5ljefq90kp3h46urdak86.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "howest.jensdemuynck.covid19"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -15,7 +15,7 @@
 
                 <FlexboxLayout class="drawer-other" flexDirection="column">
                     <Label class="drawer-item" text="Settings" @tap="goToSettings()"/>
-                    <Label class="drawer-item" text="About" @tap="About()"/>
+                    <Label class="drawer-item" text="About" @tap="goToAbout()"/>
                     <Label class="drawer-item" text="Log Out" @tap="logOut()"/>
                 </FlexboxLayout>
             </StackLayout>
@@ -37,12 +37,12 @@
                             </FlexboxLayout>
 
                             <FlexboxLayout v-if='searchbarIsShown' class="searchbar_wrap">
-                                <SearchBar ref="searchBar" hint="Search hint" :text="searchPhrase" @submit="onSubmit()" color="#1a223f" backgroundColor="white"/>
+                                <SearchBar ref="searchBar" hint="Search hint" v-model="searchPhrase" @submit="onSubmit()" color="#1a223f" backgroundColor="white"/>
                             </FlexboxLayout>
                         </FlexboxLayout>
                         
                         <FlexboxLayout class="title" justifyContent="space-between" width="100%" marginBottom="50px">
-                            <Label text="Belgium" />
+                            <Label class="current_country" v-model="current_country" @tap="makeApiCall('belgium')">{{current_country}}</Label>
                             <Image src="~/assets/images/heart-true.png" stretch="aspectFit" width="100px"></Image>
                         </FlexboxLayout>
 
@@ -50,49 +50,49 @@
                             <FlexboxLayout class="data-item">
                                 <Label text="Cases"></Label>
                                 <Label class="dashed-line"></Label>
-                                <Label text="3401"></Label>
+                                <Label v-model="data_cases">{{data_cases}}</Label>
                             </FlexboxLayout>
 
                             <FlexboxLayout class="data-item">
                                 <Label text="Cases Today"></Label>
                                 <Label class="dashed-line"></Label>
-                                <Label text="0"></Label>
+                                <Label v-model="data_cases_today">{{data_cases_today}}</Label>
                             </FlexboxLayout>
                             
                             <FlexboxLayout class="data-item">
                                 <Label text="Deaths"></Label>
                                 <Label class="dashed-line"></Label>
-                                <Label text="75"></Label>
+                                <Label v-model="data_deaths">{{data_deaths}}</Label>
                             </FlexboxLayout>
 
                             <FlexboxLayout class="data-item">
                                 <Label text="Deaths Today"></Label>
                                 <Label class="dashed-line"></Label>
-                                <Label text="0"></Label>
+                                <Label v-model="data_deaths_today">{{data_deaths_today}}</Label>
                             </FlexboxLayout>
 
                             <FlexboxLayout class="data-item">
                                 <Label text="Recovered"></Label>
                                 <Label class="dashed-line"></Label>
-                                <Label text="340"></Label>
+                                <Label v-model="data_recovered">{{data_recovered}}</Label>
                             </FlexboxLayout>
 
                             <FlexboxLayout class="data-item">
                                 <Label text="Active"></Label>
                                 <Label class="dashed-line"></Label>
-                                <Label text="2986"></Label>
+                                <Label v-model="data_active">{{data_active}}</Label>
                             </FlexboxLayout>
                             
                             <FlexboxLayout class="data-item">
                                 <Label text="Critical"></Label>
                                 <Label class="dashed-line"></Label>
-                                <Label text="288"></Label>
+                                <Label v-model="data_critical">{{data_critical}}</Label>
                             </FlexboxLayout>
 
                             <FlexboxLayout class="data-item">
                                 <Label text="Cases / million"></Label>
                                 <Label class="dashed-line"></Label>
-                                <Label text="293"></Label>
+                                <Label v-model="data_cases_per_million">{{data_cases_per_million}}</Label>
                             </FlexboxLayout>
                         </FlexboxLayout>
                     </FlexboxLayout>
@@ -109,11 +109,26 @@
     import Overview from '~/screens/Overview.vue'
     import Timeline from '~/screens/Timeline.vue'
     import Watchlist from '~/screens/Watchlist.vue'
+    import About from '~/screens/About.vue'
+
+    import * as http from "http"; /* Used for api calls */
+    import * as application from 'application'; /* Used to get IP address */ 
 
     export default {
+        props: ['user'],
         data: function() {
             return {
-                searchbarIsShown: false
+                searchbarIsShown: false,
+                searchPhrase: "",
+                current_country: 'Belgium',
+                data_cases: 0,
+                data_cases_today: 0,
+                data_deaths: 0,
+                data_deaths_today: 0,
+                data_recovered: 0,
+                data_active: 0,
+                data_critical: 0,
+                data_cases_per_million: 0
             }
         },
         methods:{
@@ -129,11 +144,13 @@
             goToSettings() {
                 this.$navigateTo(Settings);
             },
-            About(){
-                console.log("ABOUT")
+            goToAbout(){
+                this.$navigateTo(About);
             },
             logOut(){
-                this.$navigateTo(App);
+                const firebase = require('nativescript-plugin-firebase')
+                firebase.logout()
+                .then(() => this.$navigateTo(App) )
             },
             gotoWebWHO() {
                 const utilsModule = require("tns-core-modules/utils/utils");
@@ -148,10 +165,30 @@
                 console.log(this.searchbarIsShown)
             },
             onSubmit(){
-                console.log('sumbitted search')
                 this.searchbarIsShown = false
                 this.$refs.searchBar.nativeView.dismissSoftInput()
                 this.$refs.searchBar.nativeView.android.clearFocus()
+                this.makeApiCall(this.searchPhrase)
+                this.current_country = this.searchPhrase
+                this.searchPhrase = ""
+            },
+            logUserProp(){
+                console.log(this.user)
+            },
+            makeApiCall(country) {
+                http.getJSON(`https://corona.lmao.ninja/countries/${country}`)
+                .then(result => {
+                    this.data_cases = result.cases 
+                    this.data_cases_today = result.todayCases 
+                    this.data_deaths = result.deaths 
+                    this.data_deaths_today = result.todayDeaths
+                    this.data_recovered = result.recovered
+                    this.data_active = result.active
+                    this.data_critical = result.critical
+                    this.data_cases_per_million = result.casesPerOneMillion
+                }, error => {
+                    console.log(error);
+                });
             }
         },
         components: {
@@ -159,7 +196,11 @@
             Signup,
             Settings,
             Timeline,
-            Watchlist
+            Watchlist,
+            About
+        },
+        beforeMount(){
+            this.makeApiCall('belgium')
         }
     };
 </script>
@@ -198,6 +239,10 @@
     .menu-icon{
         width: 70px;
         height: 70px;
+    }
+
+    .current_country{
+        text-transform: capitalize;
     }
 
     .data-list{

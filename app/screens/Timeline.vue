@@ -15,7 +15,7 @@
 
                 <FlexboxLayout class="drawer-other" flexDirection="column">
                     <Label class="drawer-item" text="Settings" @tap="goToSettings()"/>
-                    <Label class="drawer-item" text="About" @tap="About()"/>
+                    <Label class="drawer-item" text="About" @tap="goToAbout()"/>
                     <Label class="drawer-item" text="Log Out" @tap="logOut()"/>
                 </FlexboxLayout>
             </StackLayout>
@@ -79,6 +79,7 @@
     import Overview from '~/screens/Overview.vue'
     import Timeline from '~/screens/Timeline.vue'
     import Watchlist from '~/screens/Watchlist.vue'
+    import About from '~/screens/About.vue'
 
     export default {
         data: function() {
@@ -99,11 +100,13 @@
             goToSettings() {
                 this.$navigateTo(Settings);
             },
-            About(){
-                console.log("ABOUT")
+            goToAbout(){
+                this.$navigateTo(About);
             },
             logOut(){
-                this.$navigateTo(App);
+                const firebase = require('nativescript-plugin-firebase')
+                firebase.logout()
+                .then(() => this.$navigateTo(App) )
             },
             gotoWebWHO() {
                 const utilsModule = require("tns-core-modules/utils/utils");
