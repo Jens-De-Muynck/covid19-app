@@ -17,7 +17,7 @@
                         <Image src="~/assets/images/bg-shape.png" iosOverflowSafeArea="true" stretch="aspectFit" width="100%" rowSpan="3"></Image>
                     </FlexboxLayout>
 
-                    <FlexboxLayout class="content" flexDirection="column" justifyContent="space-between" alignItems="center">
+                    <FlexboxLayout class="content">
                         <StackLayout class="title">
                             <Label text="Hello there," />
                             <Label text="welcome back" />
@@ -117,6 +117,9 @@
 <style scoped>
     .content{
         margin: 25% 5% 18% 5%;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .title{

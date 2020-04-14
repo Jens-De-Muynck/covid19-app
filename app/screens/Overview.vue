@@ -43,7 +43,7 @@
                         
                         <FlexboxLayout class="title" justifyContent="space-between" width="100%" marginBottom="50px">
                             <Label class="current_country" v-model="current_country" @tap="makeApiCall('belgium')">{{current_country}}</Label>
-                            <Image src="~/assets/images/heart-true.png" stretch="aspectFit" width="100px"></Image>
+                            <Image src="~/assets/images/eye-add.png" stretch="aspectFit" width="100px"></Image>
                         </FlexboxLayout>
 
                         <FlexboxLayout class="data-list" flexDirection="column" justifyContent="space-between">
