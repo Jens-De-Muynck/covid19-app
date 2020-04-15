@@ -78,6 +78,7 @@
                     this.signup_confirm_password != "" /* Check if all fields are filled */
                 ){
                     if(this.signup_password == this.signup_confirm_password){ /* Check if passwords match eachother */
+                        // Create User
                         return firebase.createUser({
                             email: this.signup_email,
                             password: this.signup_password

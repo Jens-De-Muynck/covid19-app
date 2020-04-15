@@ -128,7 +128,9 @@
                 data_recovered: 0,
                 data_active: 0,
                 data_critical: 0,
-                data_cases_per_million: 0
+                data_cases_per_million: 0,
+                current_user: this.user,
+                current_watchlist: []
             }
         },
         methods:{
@@ -139,7 +141,14 @@
                 this.$navigateTo(Timeline);
             },
             goToWatchlist() {
-                this.$navigateTo(Watchlist);
+                this.$navigateTo(
+                    Watchlist, 
+                    {
+                        props: {
+                            watchlist: JSON.stringify(this.current_watchlist)
+                        }
+                    }
+                );
             },
             goToSettings() {
                 this.$navigateTo(Settings);
@@ -162,7 +171,6 @@
                     this.$refs.searchBar.nativeView.dismissSoftInput()
                     this.$refs.searchBar.nativeView.android.clearFocus()
                 }
-                console.log(this.searchbarIsShown)
             },
             onSubmit(){
                 this.searchbarIsShown = false
@@ -171,9 +179,6 @@
                 this.makeApiCall(this.searchPhrase)
                 this.current_country = this.searchPhrase
                 this.searchPhrase = ""
-            },
-            logUserProp(){
-                console.log(this.user)
             },
             makeApiCall(country) {
                 http.getJSON(`https://corona.lmao.ninja/countries/${country}`)
@@ -187,8 +192,63 @@
                     this.data_critical = result.critical
                     this.data_cases_per_million = result.casesPerOneMillion
                 }, error => {
+                    console.log('API Error: ');
                     console.log(error);
                 });
+            },
+            handleDatabase(){
+                const firebase = require('nativescript-plugin-firebase')
+
+                firebase.init({
+                    persist: true
+                });
+
+                firebase.query(
+                    function() {}, // Mandatory for signature
+                    `/users`,
+                    {
+                        singleEvent: true,
+                        orderBy: {
+                            type: firebase.QueryOrderByType.KEY
+                        },
+                        range: {
+                            type: firebase.QueryRangeType.EQUAL_TO,
+                            value: JSON.parse(this.current_user).uid
+                        },
+                        limit: {
+                            type: firebase.QueryLimitType.FIRST,
+                            value: 1
+                        }   
+                    }
+                )
+                .then(result => {
+                    if(Object.keys(result.value).length !== 0){ // User bestaat
+                    
+                        // Loop through all existing users
+                        for (let i = 0; i < Object.keys(result.value).length; i++){
+                            // DATABASE user id ==? CURRENT user id
+                            if(Object.keys(result.value)[0] == JSON.parse(this.current_user).uid){
+                                // Put all items in watchlist in a variable array
+                                var country_arr = result.value[JSON.parse(this.current_user).uid].watchlist
+                                country_arr.forEach(country_item => {
+                                    this.current_watchlist.push(country_item)
+                                });
+                            }
+                        }
+
+                    }
+                    else{ // User bestaat nog niet
+                        console.log("No Results Found")
+
+                        // firebase.setValue( // delete me cuz i overwrite everything
+                        //     `/users/${JSON.parse(this.current_user).uid}`,
+                        //     {
+                        //         watchlist: [""]
+                        //     }
+                        // );
+                    }
+                })
+                .catch(error => console.log("UserID Error: " + error));
             }
         },
         components: {
@@ -201,6 +261,7 @@
         },
         beforeMount(){
             this.makeApiCall('belgium')
+            this.handleDatabase()
         }
     };
 </script>

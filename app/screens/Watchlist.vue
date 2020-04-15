@@ -47,27 +47,10 @@
                         </FlexboxLayout>
 
                         <FlexboxLayout class="data-list" flexDirection="column">
-                            <FlexboxLayout class="data-item">
+                            
+                            <FlexboxLayout class="data-item" v-for='country in JSON.parse(this.watchlist)' :key="country">
                                 <Image src="~/assets/images/menu.png" width="80px" class="country-flag"></Image>
-                                <Label text="Belgium" class="country-name"></Label>
-                                <Image src="~/assets/images/back-arrow.png" width="30px" class="country-arrow"></Image>
-                            </FlexboxLayout>
-
-                            <FlexboxLayout class="data-item">
-                                <Image src="~/assets/images/menu.png" width="80px" class="country-flag"></Image>
-                                <Label text="Belgium" class="country-name"></Label>
-                                <Image src="~/assets/images/back-arrow.png" width="30px" class="country-arrow"></Image>
-                            </FlexboxLayout>
-
-                            <FlexboxLayout class="data-item">
-                                <Image src="~/assets/images/menu.png" width="80px" class="country-flag"></Image>
-                                <Label text="Belgium" class="country-name"></Label>
-                                <Image src="~/assets/images/back-arrow.png" width="30px" class="country-arrow"></Image>
-                            </FlexboxLayout>
-
-                            <FlexboxLayout class="data-item">
-                                <Image src="~/assets/images/menu.png" width="80px" class="country-flag"></Image>
-                                <Label text="Belgium" class="country-name"></Label>
+                                <Label class="country-name">{{country}}</Label>
                                 <Image src="~/assets/images/back-arrow.png" width="30px" class="country-arrow"></Image>
                             </FlexboxLayout>
                         </FlexboxLayout>
@@ -88,6 +71,7 @@
     import About from '~/screens/About.vue'
 
     export default {
+        props: ["watchlist"],
         data: function() {
             return {
                 searchbarIsShown: false
