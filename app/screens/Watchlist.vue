@@ -10,7 +10,7 @@
                 <FlexboxLayout class="drawer-screens" flexDirection="column">
                     <Label class="drawer-item" text="Overview" @tap="goToOverview()"/>
                     <Label class="drawer-item" text="Timeline" @tap="goToTimeline()"/>
-                    <Label class="drawer-item" text="Watchlist" @tap="goToWatchlist()"/>
+                    <Label class="drawer-item" text="Watchlist" @tap="$refs.drawer.nativeView.closeDrawer()"/>
                 </FlexboxLayout>
 
                 <FlexboxLayout class="drawer-other" flexDirection="column">
@@ -48,9 +48,9 @@
 
                         <FlexboxLayout class="data-list" flexDirection="column">
                             
-                            <FlexboxLayout class="data-item" v-for='country in this.watchlist' :key="country">
-                                <Image src="~/assets/images/menu.png" width="80px" class="country-flag"></Image>
-                                <Label class="country-name">{{country}}</Label>
+                            <FlexboxLayout class="data-item" v-for='country in this.current_watchlist' :key="country">
+                                <Image :src="country.flag" width="80px" class="country-flag"></Image>
+                                <Label class="country-name">{{country.name}}</Label>
                                 <Image src="~/assets/images/back-arrow.png" width="30px" class="country-arrow"></Image>
                             </FlexboxLayout>
                         </FlexboxLayout>
@@ -62,6 +62,8 @@
 </template>
 
 <script>
+    import * as http from "http"; /* Used for api calls */
+
     import App from '~/components/App.vue'
     import Signup from '~/screens/Signup.vue'
     import Settings from '~/screens/Settings.vue'
@@ -71,21 +73,37 @@
     import About from '~/screens/About.vue'
 
     export default {
-        props: ["watchlist"],
+        props: ['user','country'],
         data: function() {
             return {
-                searchbarIsShown: false
+                searchbarIsShown: false,
+                current_user: this.user,
+                current_country: this.country,
+                current_watchlist: []
             }
         },
         methods:{
             goToOverview() {
-                this.$navigateTo(Overview);
+                this.$navigateTo(
+                    Overview,
+                    {
+                        props: {
+                            user: this.current_user,
+                            country: this.current_country
+                        }
+                    }
+                );
             },
             goToTimeline() {
-                this.$navigateTo(Timeline);
-            },
-            goToWatchlist() {
-                this.$navigateTo(Watchlist);
+                this.$navigateTo(
+                    Timeline,
+                    {
+                        props: {
+                            user: this.current_user,
+                            country: this.current_country
+                        }
+                    }
+                );
             },
             goToSettings() {
                 this.$navigateTo(Settings);
@@ -115,6 +133,82 @@
                 this.searchbarIsShown = false
                 this.$refs.searchBar.nativeView.dismissSoftInput()
                 this.$refs.searchBar.nativeView.android.clearFocus()
+            },
+            getWatchlist(){
+                console.log("CURRENT USER")
+                console.log(this.current_user.uid)
+                const firebase = require('nativescript-plugin-firebase')
+
+                firebase.init({
+                    persist: true
+                });
+
+                firebase.query(
+                    function() {}, // Mandatory for signature
+                    `/users`,
+                    {
+                        singleEvent: true,
+                        orderBy: {
+                            type: firebase.QueryOrderByType.KEY
+                        },
+                        range: {
+                            type: firebase.QueryRangeType.EQUAL_TO,
+                            value: this.current_user.uid
+                        },
+                        limit: {
+                            type: firebase.QueryLimitType.FIRST,
+                            value: 1
+                        }   
+                    }
+                )
+                .then(result => {
+                    if(Object.keys(result.value).length !== 0){ // User bestaat
+                    
+                        console.log("Query Succeeded:")
+                        console.log(result)
+
+                        // Loop through all existing users
+                        for (let i = 0; i < Object.keys(result.value).length; i++){
+                            // DATABASE user id ==? CURRENT user id
+                            if(Object.keys(result.value)[0] == this.current_user.uid){
+                                // Put all items in watchlist in a variable array
+                                var country_arr = result.value[this.current_user.uid].watchlist
+                                country_arr.forEach(country_item => {
+
+                                    // Get flag src
+                                    console.log("Searching Flag...");
+
+                                    http.getJSON(`https://corona.lmao.ninja/v2/countries/${country_item}`)
+                                    .then(result => {
+                                        let flag_item = result.countryInfo.flag
+
+                                        let current_country_data = {
+                                            "name": country_item,
+                                            "flag": flag_item
+                                        }
+
+                                        this.current_watchlist.push(current_country_data)
+
+                                        console.log(current_country_data);
+                                    })
+                                    .catch(error => console.log("API Error: " + error));
+                                });
+                            }
+                        }
+
+                    }
+                    else{ // User bestaat nog niet
+                        console.log("Query Failed")
+
+                        // firebase.setValue( // delete me cuz i overwrite everything
+                        //     `/users/${JSON.parse(this.current_user).uid}`,
+                        //     {
+                        //         watchlist: [""]
+                        //     }
+                        // );
+                    }
+                })
+                .catch(error => console.log("UserID Error: " + error));
             }
         },
         components: {
@@ -124,6 +218,9 @@
             Overview,
             Timeline,
             Watchlist
+        },
+        beforeMount(){
+            this.getWatchlist()
         }
     };
 </script>
@@ -180,7 +277,14 @@
         margin-bottom: 30px;
     }
 
+    .country-flag{
+        border-width: 1px;
+        border-color: rgba(255, 255, 255, 0.55);
+        border-style: solid;
+    }
+
     .country-name{
+        text-transform: capitalize;
         flex: 1;
         padding-left: 30px;
     }

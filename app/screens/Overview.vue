@@ -8,7 +8,7 @@
                 </FlexboxLayout>
 
                 <FlexboxLayout class="drawer-screens" flexDirection="column">
-                    <Label class="drawer-item" text="Overview" @tap="goToOverview()"/>
+                    <Label class="drawer-item" text="Overview" @tap="$refs.drawer.nativeView.closeDrawer()"/>
                     <Label class="drawer-item" text="Timeline" @tap="goToTimeline()"/>
                     <Label class="drawer-item" text="Watchlist" @tap="goToWatchlist()"/>
                 </FlexboxLayout>
@@ -103,6 +103,8 @@
 </template>
 
 <script>
+    import * as http from "http"; /* Used for api calls */
+    
     import App from '~/components/App.vue'
     import Signup from '~/screens/Signup.vue'
     import Settings from '~/screens/Settings.vue'
@@ -111,16 +113,12 @@
     import Watchlist from '~/screens/Watchlist.vue'
     import About from '~/screens/About.vue'
 
-    import * as http from "http"; /* Used for api calls */
-    import * as application from 'application'; /* Used to get IP address */ 
-
     export default {
-        props: ['user'],
+        props: ['user', 'country'],
         data: function() {
             return {
                 searchbarIsShown: false,
                 searchPhrase: "",
-                current_country: 'Belgium',
                 data_cases: 0,
                 data_cases_today: 0,
                 data_deaths: 0,
@@ -130,22 +128,28 @@
                 data_critical: 0,
                 data_cases_per_million: 0,
                 current_user: this.user,
-                current_watchlist: []
+                current_country: this.country || 'belgium'
             }
         },
         methods:{
-            goToOverview() {
-                this.$navigateTo(Overview);
-            },
             goToTimeline() {
-                this.$navigateTo(Timeline);
+                this.$navigateTo(
+                    Timeline,
+                    {
+                        props: {
+                            user: this.current_user,
+                            country: this.current_country
+                        }
+                    }
+                );
             },
             goToWatchlist() {
                 this.$navigateTo(
                     Watchlist, 
                     {
                         props: {
-                            watchlist: this.current_watchlist
+                            user: this.current_user,
+                            country: this.current_country
                         }
                     }
                 );
@@ -160,6 +164,7 @@
                 const firebase = require('nativescript-plugin-firebase')
                 firebase.logout()
                 .then(() => this.$navigateTo(App) )
+                .catch(error => console.log("couldn't logout: " + error));
             },
             gotoWebWHO() {
                 const utilsModule = require("tns-core-modules/utils/utils");
@@ -199,70 +204,8 @@
                     this.data_active = result.active
                     this.data_critical = result.critical
                     this.data_cases_per_million = result.casesPerOneMillion
-                }, error => {
-                    console.log('API Error: ');
-                    console.log(error);
-                });
-            },
-            handleDatabase(){
-                console.log("CURRENT USER")
-                console.log(this.current_user.uid)
-                const firebase = require('nativescript-plugin-firebase')
-
-                firebase.init({
-                    persist: true
-                });
-
-                firebase.query(
-                    function() {}, // Mandatory for signature
-                    `/users`,
-                    {
-                        singleEvent: true,
-                        orderBy: {
-                            type: firebase.QueryOrderByType.KEY
-                        },
-                        range: {
-                            type: firebase.QueryRangeType.EQUAL_TO,
-                            value: this.current_user.uid
-                        },
-                        limit: {
-                            type: firebase.QueryLimitType.FIRST,
-                            value: 1
-                        }   
-                    }
-                )
-                .then(result => {
-                    if(Object.keys(result.value).length !== 0){ // User bestaat
-                    
-                        console.log("Query Succeeded:")
-                        console.log(result)
-
-                        // Loop through all existing users
-                        for (let i = 0; i < Object.keys(result.value).length; i++){
-                            // DATABASE user id ==? CURRENT user id
-                            if(Object.keys(result.value)[0] == this.current_user.uid){
-                                // Put all items in watchlist in a variable array
-                                var country_arr = result.value[this.current_user.uid].watchlist
-                                country_arr.forEach(country_item => {
-                                    this.current_watchlist.push(country_item)
-                                    console.log(country_item);
-                                });
-                            }
-                        }
-
-                    }
-                    else{ // User bestaat nog niet
-                        console.log("Query Failed")
-
-                        // firebase.setValue( // delete me cuz i overwrite everything
-                        //     `/users/${JSON.parse(this.current_user).uid}`,
-                        //     {
-                        //         watchlist: [""]
-                        //     }
-                        // );
-                    }
                 })
-                .catch(error => console.log("UserID Error: " + error));
+                .catch(error => console.log("API Error: " + error));
             }
         },
         components: {
@@ -274,8 +217,8 @@
             About
         },
         beforeMount(){
-            this.makeApiCall('belgium')
-            this.handleDatabase()
+            this.makeApiCall(this.current_country)
+            
         }
     };
 </script>
