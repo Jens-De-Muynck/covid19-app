@@ -83,12 +83,13 @@
                     })
                     .then(
                         result => {
-                            console.log("SUCCES: " + JSON.stringify(result))
+                            console.log("SUCCES:")
+                            console.log(result)
                             this.login_error = ""
 
                             this.$navigateTo(Overview, {
                                     props: {
-                                        user: JSON.stringify(result)
+                                        user: result
                                     }
                                 }
                             )

@@ -48,7 +48,7 @@
 
                         <FlexboxLayout class="data-list" flexDirection="column">
                             
-                            <FlexboxLayout class="data-item" v-for='country in JSON.parse(this.watchlist)' :key="country">
+                            <FlexboxLayout class="data-item" v-for='country in this.watchlist' :key="country">
                                 <Image src="~/assets/images/menu.png" width="80px" class="country-flag"></Image>
                                 <Label class="country-name">{{country}}</Label>
                                 <Image src="~/assets/images/back-arrow.png" width="30px" class="country-arrow"></Image>
@@ -178,9 +178,6 @@
         font-size: 24rem;
         padding: 20px 35px;
         margin-bottom: 30px;
-    }
-
-    .country-flag{
     }
 
     .country-name{

@@ -145,7 +145,7 @@
                     Watchlist, 
                     {
                         props: {
-                            watchlist: JSON.stringify(this.current_watchlist)
+                            watchlist: this.current_watchlist
                         }
                     }
                 );
@@ -181,8 +181,16 @@
                 this.searchPhrase = ""
             },
             makeApiCall(country) {
-                http.getJSON(`https://corona.lmao.ninja/countries/${country}`)
+                console.log("Start Fetching Api...");
+
+                http.getJSON(`https://corona.lmao.ninja/v2/countries/${country}`)
                 .then(result => {
+                    console.log("Filling API data...");
+
+                    console.log(`(with =>`);
+                    console.log(result);
+                    console.log(`)`);
+                    
                     this.data_cases = result.cases 
                     this.data_cases_today = result.todayCases 
                     this.data_deaths = result.deaths 
@@ -197,6 +205,8 @@
                 });
             },
             handleDatabase(){
+                console.log("CURRENT USER")
+                console.log(this.current_user.uid)
                 const firebase = require('nativescript-plugin-firebase')
 
                 firebase.init({
@@ -213,7 +223,7 @@
                         },
                         range: {
                             type: firebase.QueryRangeType.EQUAL_TO,
-                            value: JSON.parse(this.current_user).uid
+                            value: this.current_user.uid
                         },
                         limit: {
                             type: firebase.QueryLimitType.FIRST,
@@ -224,21 +234,25 @@
                 .then(result => {
                     if(Object.keys(result.value).length !== 0){ // User bestaat
                     
+                        console.log("Query Succeeded:")
+                        console.log(result)
+
                         // Loop through all existing users
                         for (let i = 0; i < Object.keys(result.value).length; i++){
                             // DATABASE user id ==? CURRENT user id
-                            if(Object.keys(result.value)[0] == JSON.parse(this.current_user).uid){
+                            if(Object.keys(result.value)[0] == this.current_user.uid){
                                 // Put all items in watchlist in a variable array
-                                var country_arr = result.value[JSON.parse(this.current_user).uid].watchlist
+                                var country_arr = result.value[this.current_user.uid].watchlist
                                 country_arr.forEach(country_item => {
                                     this.current_watchlist.push(country_item)
+                                    console.log(country_item);
                                 });
                             }
                         }
 
                     }
                     else{ // User bestaat nog niet
-                        console.log("No Results Found")
+                        console.log("Query Failed")
 
                         // firebase.setValue( // delete me cuz i overwrite everything
                         //     `/users/${JSON.parse(this.current_user).uid}`,
