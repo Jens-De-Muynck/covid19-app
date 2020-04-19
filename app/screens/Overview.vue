@@ -43,7 +43,7 @@
                         
                         <FlexboxLayout class="title" justifyContent="space-between" width="100%" marginBottom="50px">
                             <Label class="current_country" v-model="current_country" @tap="makeApiCall('belgium')">{{current_country}}</Label>
-                            <Image src="~/assets/images/eye-add.png" stretch="aspectFit" width="100px"></Image>
+                            <Image :src="this.isInWatchlist ? '~/assets/images/eye-remove.png' : '~/assets/images/eye-add.png'" stretch="aspectFit" width="100px" @tap="handleWatchlist(false)"></Image>
                         </FlexboxLayout>
 
                         <FlexboxLayout class="data-list" flexDirection="column" justifyContent="space-between">
@@ -128,7 +128,9 @@
                 data_critical: 0,
                 data_cases_per_million: 0,
                 current_user: this.user,
-                current_country: this.country || 'belgium'
+                current_country: this.country || 'belgium',
+                isInWatchlist: false,
+                current_watchlist: []
             }
         },
         methods:{
@@ -162,6 +164,8 @@
             },
             logOut(){
                 const firebase = require('nativescript-plugin-firebase')
+                this.current_user = null
+
                 firebase.logout()
                 .then(() => this.$navigateTo(App) )
                 .catch(error => console.log("couldn't logout: " + error));
@@ -184,17 +188,19 @@
                 this.makeApiCall(this.searchPhrase)
                 this.current_country = this.searchPhrase
                 this.searchPhrase = ""
+
+                this.handleWatchlist(true)
             },
             makeApiCall(country) {
-                console.log("Start Fetching Api...");
+                // console.log("Start Fetching Api...");
 
                 http.getJSON(`https://corona.lmao.ninja/v2/countries/${country}`)
                 .then(result => {
-                    console.log("Filling API data...");
+                    // console.log("Filling API data...");
 
-                    console.log(`(with =>`);
-                    console.log(result);
-                    console.log(`)`);
+                    // console.log(`(with =>`);
+                    // console.log(result);
+                    // console.log(`)`);
                     
                     this.data_cases = result.cases 
                     this.data_cases_today = result.todayCases 
@@ -206,6 +212,77 @@
                     this.data_cases_per_million = result.casesPerOneMillion
                 })
                 .catch(error => console.log("API Error: " + error));
+            },
+            handleWatchlist(calledOnLoad){
+                console.log('-- START HANDLING WATCHLIST --')
+                const firebase = require("nativescript-plugin-firebase");
+                let functionIsDone = false
+
+                firebase.init();
+                
+                if(calledOnLoad){
+                    // firebase.setValue( // DELETE ME
+                    //     `/users/${this.current_user.uid}`,
+                    //     {
+                    //         watchlist: [
+                    //             'belgium',
+                    //             'hungary',
+                    //             'france',
+                    //             'netherlands'
+                    //         ]
+                    //     }
+                    // );
+                }
+
+                firebase.getValue(`/users/${this.current_user.uid}/watchlist`)
+                .then(result => {
+                    this.current_watchlist = result.value || {}
+                })
+                .then(() => {
+
+                    let temp_watchlist = Object.entries(this.current_watchlist)
+                    
+                    for (let i = temp_watchlist.length-1; i >= 0; i--) {
+                        if(temp_watchlist[i][1] == this.current_country){
+                            this.isInWatchlist = true
+
+                            console.log("1. Is in watchlist:", this.isInWatchlist)
+                    
+                            if(!calledOnLoad){
+                                // Remove from db watchlist
+                                firebase.remove(`/users/${this.current_user.uid}/watchlist/${temp_watchlist[i][0]}`);
+
+                                // Remove from local watchlist
+                                temp_watchlist.splice[i, 1]
+
+                                this.isInWatchlist = false
+                                console.log("2. Is in watchlist:", this.isInWatchlist)
+                                functionIsDone = true
+                            }
+                        }
+                    }
+
+                    if(!(this.isInWatchlist) && !calledOnLoad && !functionIsDone){
+                        this.isInWatchlist = true
+                        console.log("3. Is in watchlist:", this.isInWatchlist)
+
+                        // Add to db watchlist
+                        firebase.push(
+                            `/users/${this.current_user.uid}/watchlist`,
+                            this.current_country
+                        ).then(
+                            function (result) {
+                                console.log("created key: " + result.key);
+                            }
+                        );
+
+                        // Add to local watchlist
+                        temp_watchlist.push(this.current_country)
+                    }
+                })
+                .catch(error => {
+                    console.log("Error: " + error)
+                });
             }
         },
         components: {
@@ -218,7 +295,7 @@
         },
         beforeMount(){
             this.makeApiCall(this.current_country)
-            
+            this.handleWatchlist(true)
         }
     };
 </script>

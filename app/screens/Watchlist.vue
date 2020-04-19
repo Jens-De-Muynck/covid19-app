@@ -37,7 +37,7 @@
                             </FlexboxLayout>
 
                             <FlexboxLayout v-if='searchbarIsShown' class="searchbar_wrap">
-                                <SearchBar ref="searchBar" hint="Search hint" :text="searchPhrase" @submit="onSubmit()" color="#1a223f" backgroundColor="white"/>
+                                <SearchBar ref="searchBar" hint="Search hint" v-model="searchPhrase" @submit="onSubmit()" color="#1a223f" backgroundColor="white"/>
                             </FlexboxLayout>
                         </FlexboxLayout>
                         
@@ -77,6 +77,7 @@
         data: function() {
             return {
                 searchbarIsShown: false,
+                searchPhrase: '',
                 current_user: this.user,
                 current_country: this.country,
                 current_watchlist: []
@@ -111,10 +112,12 @@
             goToAbout(){
                 this.$navigateTo(About);
             },
-            logOut(){
-                const firebase = require('nativescript-plugin-firebase')
-                firebase.logout()
-                .then(() => this.$navigateTo(App) )
+            logOut() {
+                const firebase = require("nativescript-plugin-firebase");
+                this.current_user = null
+                    
+                firebase.logout().then(() => this.$navigateTo(App))
+                .catch(error => console.log("couldn't logout: " + error));
             },
             gotoWebWHO() {
                 const utilsModule = require("tns-core-modules/utils/utils");
@@ -129,10 +132,11 @@
                 console.log(this.searchbarIsShown)
             },
             onSubmit(){
-                console.log('sumbitted search')
-                this.searchbarIsShown = false
-                this.$refs.searchBar.nativeView.dismissSoftInput()
-                this.$refs.searchBar.nativeView.android.clearFocus()
+                this.searchbarIsShown = false;
+                this.$refs.searchBar.nativeView.dismissSoftInput();
+                this.$refs.searchBar.nativeView.android.clearFocus();
+                this.current_country = this.searchPhrase
+                this.goToOverview()
             },
             getWatchlist(){
                 console.log("CURRENT USER")
@@ -199,13 +203,6 @@
                     }
                     else{ // User bestaat nog niet
                         console.log("Query Failed")
-
-                        // firebase.setValue( // delete me cuz i overwrite everything
-                        //     `/users/${JSON.parse(this.current_user).uid}`,
-                        //     {
-                        //         watchlist: [""]
-                        //     }
-                        // );
                     }
                 })
                 .catch(error => console.log("UserID Error: " + error));
