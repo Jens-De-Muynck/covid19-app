@@ -48,7 +48,7 @@
 
                         <FlexboxLayout class="data-list" flexDirection="column">
                             
-                            <FlexboxLayout class="data-item" v-for='country in this.current_watchlist' :key="country">
+                            <FlexboxLayout class="data-item" v-for='country in this.current_watchlist' :key="country" @tap="tappedWatchlistItem(country)">
                                 <Image :src="country.flag" width="80px" class="country-flag"></Image>
                                 <Label class="country-name">{{country.name}}</Label>
                                 <Image src="~/assets/images/back-arrow.png" width="30px" class="country-arrow"></Image>
@@ -169,14 +169,13 @@
                     if(Object.keys(result.value).length !== 0){ // User bestaat
                     
                         console.log("Query Succeeded:")
-                        console.log(result)
 
                         // Loop through all existing users
                         for (let i = 0; i < Object.keys(result.value).length; i++){
                             // DATABASE user id ==? CURRENT user id
                             if(Object.keys(result.value)[0] == this.current_user.uid){
                                 // Put all items in watchlist in a variable array
-                                var country_arr = result.value[this.current_user.uid].watchlist
+                                var country_arr = Object.values(result.value[this.current_user.uid].watchlist)
                                 country_arr.forEach(country_item => {
 
                                     // Get flag src
@@ -206,6 +205,10 @@
                     }
                 })
                 .catch(error => console.log("UserID Error: " + error));
+            },
+            tappedWatchlistItem(selected_country){
+                this.current_country = selected_country.name
+                this.goToOverview()
             }
         },
         components: {

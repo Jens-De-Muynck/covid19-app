@@ -214,7 +214,7 @@
                 .catch(error => console.log("API Error: " + error));
             },
             handleWatchlist(calledOnLoad){
-                console.log('-- START HANDLING WATCHLIST --')
+                // console.log('-- START HANDLING WATCHLIST --')
                 const firebase = require("nativescript-plugin-firebase");
                 let functionIsDone = false
 
@@ -245,8 +245,6 @@
                     for (let i = temp_watchlist.length-1; i >= 0; i--) {
                         if(temp_watchlist[i][1] == this.current_country){
                             this.isInWatchlist = true
-
-                            console.log("1. Is in watchlist:", this.isInWatchlist)
                     
                             if(!calledOnLoad){
                                 // Remove from db watchlist
@@ -256,7 +254,6 @@
                                 temp_watchlist.splice[i, 1]
 
                                 this.isInWatchlist = false
-                                console.log("2. Is in watchlist:", this.isInWatchlist)
                                 functionIsDone = true
                             }
                         }
@@ -264,7 +261,6 @@
 
                     if(!(this.isInWatchlist) && !calledOnLoad && !functionIsDone){
                         this.isInWatchlist = true
-                        console.log("3. Is in watchlist:", this.isInWatchlist)
 
                         // Add to db watchlist
                         firebase.push(
