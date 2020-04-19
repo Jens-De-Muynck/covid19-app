@@ -202,16 +202,19 @@
                     // console.log(result);
                     // console.log(`)`);
                     
-                    this.data_cases = result.cases 
-                    this.data_cases_today = result.todayCases 
-                    this.data_deaths = result.deaths 
-                    this.data_deaths_today = result.todayDeaths
-                    this.data_recovered = result.recovered
-                    this.data_active = result.active
-                    this.data_critical = result.critical
-                    this.data_cases_per_million = result.casesPerOneMillion
+                    this.data_cases = this.numberWithCommas(result.cases) 
+                    this.data_cases_today = this.numberWithCommas(result.todayCases) 
+                    this.data_deaths = this.numberWithCommas(result.deaths) 
+                    this.data_deaths_today = this.numberWithCommas(result.todayDeaths)
+                    this.data_recovered = this.numberWithCommas(result.recovered)
+                    this.data_active = this.numberWithCommas(result.active)
+                    this.data_critical = this.numberWithCommas(result.critical)
+                    this.data_cases_per_million = this.numberWithCommas(result.casesPerOneMillion)
                 })
                 .catch(error => console.log("API Error: " + error));
+            },
+            numberWithCommas(x) { // add dividers to large numbers for better readability
+                return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".");
             },
             handleWatchlist(calledOnLoad){
                 // console.log('-- START HANDLING WATCHLIST --')
