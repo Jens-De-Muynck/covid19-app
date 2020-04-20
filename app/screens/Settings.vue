@@ -29,12 +29,12 @@
                         <FlexboxLayout class="settings_wrap">
                             <FlexboxLayout class="setting">
                                 <Label text="Name" class="settings-label"></Label>
-                                <Label text="Jens De Muynck" class="settings-value"></Label>
+                                <Label :text="this.current_user.displayName || 'No display name found'" class="settings-value"></Label>
                             </FlexboxLayout>
 
                             <FlexboxLayout class="setting">
                                 <Label text="Email" class="settings-label"></Label>
-                                <Label text="demuynck.jens@gmail.com" class="settings-value"></Label>
+                                <Label :text="this.current_user.email || 'No email found'" class="settings-value"></Label>
                             </FlexboxLayout>
 
                             <FlexboxLayout class="setting">
@@ -42,9 +42,12 @@
                                 <Switch checked="true" class="settings-value" />
                             </FlexboxLayout>
 
-                            <Label class="link" text="Reset Password" @tap="resetPassword()"></Label>
+                            <FlexboxLayout class="reset_password_wrap">
+                                <Label class="reset_password" text="Reset Password" @tap="resetMyPassword()"></Label>
+                                <Label :text="this.resetPasswordText"></Label>
+                            </FlexboxLayout>
 
-                            <Label class="link" text="Log Out" @tap="logOut()"></Label>
+                            <Label class="log_out" text="Log Out" @tap="logOut()"></Label>
                         </FlexboxLayout>
                     </FlexboxLayout>
                 </GridLayout>
@@ -62,14 +65,20 @@
     import Watchlist from '~/screens/Watchlist.vue'
 
     export default {
+        props: ['user','country'],
         data() {
             return {
-                
+                current_user: this.user,
+                current_country: this.country,
+                resetPasswordText: ""
             }
         },
         methods:{
-            resetPassword() {
-                console.log("RESET PASSWORD")
+            resetMyPassword() {                
+                const firebase = require("nativescript-plugin-firebase");
+                console.log('RESET PASSWORD')
+                this.resetPasswordText = "Coming soon"
+                setTimeout(() => this.resetPasswordText = "", 3500)
             },
             logOut(){
                 const firebase = require('nativescript-plugin-firebase')
@@ -93,6 +102,7 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
+        color: white;
     }
 
     .title{
@@ -135,7 +145,18 @@
         color: #929292;
     }
 
-    .link{
+    .reset_password_wrap{
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+    .reset_password{
+        text-decoration: underline;
+        font-size: 16rem;
+        margin-right: 15px;
+    }
+
+    .log_out{
         text-decoration: underline;
         font-size: 16rem;
         margin-bottom: 20px;

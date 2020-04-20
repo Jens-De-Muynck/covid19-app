@@ -25,8 +25,8 @@
 
                         <FlexboxLayout class="login-form">
                             <Label v-model="login_error" :text="login_error" class="login_error" textWrap="true"/>
-                            <TextField class="login-email" v-model="login_email" hint="E-mail" autocorrect="false" keyboardType="email" />
-                            <TextField class="login-password" v-model="login_password" hint="Password" autocorrect="false" secure='true'/>
+                            <TextField style="placeholder-color:rgba(255,255,255,0.5);" class="login-email" v-model="login_email" hint="E-mail" autocorrect="false" keyboardType="email" />
+                            <TextField style="placeholder-color:rgba(255,255,255,0.5);" class="login-password" v-model="login_password" hint="Password" autocorrect="false" secure='true'/>
                             
                             <Label class="forgot-password" text="Forgot your password?" @tap="forgotPassword()"/>
                         </FlexboxLayout>
@@ -121,6 +121,7 @@
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
+        color: white;
     }
 
     .title{
@@ -141,6 +142,10 @@
         margin: 20px 0;
     }
 
+    TextField{
+        color: white;
+    }
+
     .login_error{
         font-size: 10rem;
         color: red;
@@ -159,6 +164,7 @@
         font-size: 20rem;
         padding: 5% 35%;
         background-image: linear-gradient(to right, #8537CC, #5B41DC);
+        color: white;
     }
 
     .has-account{

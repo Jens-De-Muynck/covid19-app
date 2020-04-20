@@ -106,7 +106,15 @@
                 );
             },
             goToSettings() {
-                this.$navigateTo(Settings);
+                this.$navigateTo(
+                    Settings,
+                    {
+                        props: {
+                            user: this.current_user,
+                            country: this.current_country
+                        }
+                    }
+                );
             },
             goToAbout(){
                 this.$navigateTo(About);
@@ -230,6 +238,7 @@
     flex-direction: column; 
     justify-content: space-between;
     align-items: center;
+    color: white;
 }
 
 .searchbar_wrap{
@@ -281,8 +290,6 @@
     width: 100%;
     flex-direction: column;
 }
-
-.data_scroller{}
 
 .data-item{
     background-color: rgba(0, 0, 0, 0.25);

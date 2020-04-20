@@ -27,12 +27,14 @@
                         </StackLayout>
 
                         <FlexboxLayout class="about_wrap">
-                            <Label text="This is the about"/>
+                            <Label 
+                                textWrap="true"
+                                text="In these times where COVID-19 is by far the biggest topic of conversation, I wanted to develop an informative app where you can quickly find various data about the COVID-19 situation in each country. This data is updated every 10 minutes. You can search a new country by pressing the search button and submitting a valid country. You will also find a timeline which is brought to you by a free service called “image-charts”."
+                            />
                         </FlexboxLayout>
                     </FlexboxLayout>
                 </GridLayout>
             </FlexboxLayout>
-
         </RadSideDrawer>
     </Page>
 </template>
@@ -76,6 +78,7 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
+        color: white;
     }
 
     .title{
@@ -90,6 +93,12 @@
     .about_wrap{
         flex-direction: column;
         width: 100%;
+        font-size: 14rem;
+    }
+
+    .about_wrap Label{
+        line-height: 10rem;
+        margin-bottom: 50px;
     }
 
     .menu{

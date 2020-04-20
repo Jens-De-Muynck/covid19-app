@@ -109,7 +109,15 @@ export default {
             });
         },
         goToSettings() {
-            this.$navigateTo(Settings);
+            this.$navigateTo(
+                Settings,
+                {
+                    props: {
+                        user: this.current_user,
+                        country: this.current_country
+                    }
+                }
+            );
         },
         goToAbout() {
             this.$navigateTo(About);
@@ -210,6 +218,7 @@ export default {
     flex-direction: column; 
     justify-content: space-between;
     align-items: center;
+    color: white;
 }
 
 .searchbar_wrap {

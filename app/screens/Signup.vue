@@ -25,10 +25,10 @@
                         <FlexboxLayout class="signup-form">
                             <Label v-model="signup_error" :text="signup_error" class="signup_error" textWrap="true"/>
 
-                            <TextField class="signup-name" v-model="signup_name" hint="Name" autocorrect="false" />
-                            <TextField class="signup-email" v-model="signup_email" hint="E-mail" autocorrect="false" keyboardType="email" />
-                            <TextField class="signup-password" v-model="signup_password" hint="Password" autocorrect="false" secure='true'/>
-                            <TextField class="signup-confirm-password" v-model="signup_confirm_password" hint="Confirm Password" autocorrect="false" secure='true'/>
+                            <TextField style="placeholder-color:rgba(255,255,255,0.5);" class="signup-name" v-model="signup_name" hint="Name" autocorrect="false" />
+                            <TextField style="placeholder-color:rgba(255,255,255,0.5);" class="signup-email" v-model="signup_email" hint="E-mail" autocorrect="false" keyboardType="email" />
+                            <TextField style="placeholder-color:rgba(255,255,255,0.5);" class="signup-password" v-model="signup_password" hint="Password" autocorrect="false" secure='true'/>
+                            <TextField style="placeholder-color:rgba(255,255,255,0.5);" class="signup-confirm-password" v-model="signup_confirm_password" hint="Confirm Password" autocorrect="false" secure='true'/>
                         </FlexboxLayout>
 
                         <Label textWrap='true' class="TOS">
@@ -85,8 +85,9 @@
                         })
                         .then(
                             result => {
-                                console.log("SUCCES:")
-                                console.log(result)
+                                // console.log("SUCCES:")
+                                // console.log(result)
+
                                 this.signup_error = ""
 
                                 this.$navigateTo(Overview, {
@@ -126,6 +127,7 @@
         flex-direction: column; 
         justify-content: space-between;
         align-items: center;
+        color: white;
     }
 
     .title{
@@ -162,6 +164,7 @@
         font-size: 20rem;
         padding: 5% 35%;
         background-image: linear-gradient(to right, #8537CC, #5B41DC);
+        color: white;
     }
 
     .has-account{
