@@ -35,7 +35,7 @@
                             </FlexboxLayout>
 
                             <FlexboxLayout v-if="searchbarIsShown" class="searchbar_wrap">
-                                <SearchBar ref="searchBar" hint="Search hint" v-model="searchPhrase" @submit="onSubmit()" color="#1a223f" backgroundColor="white"/>
+                                <SearchBar ref="searchBar" hint="Search country" v-model="searchPhrase" @submit="onSubmit()" color="#1a223f" backgroundColor="white"/>
                             </FlexboxLayout>
                         </FlexboxLayout>
 
@@ -139,26 +139,25 @@ export default {
                 this.$refs.searchBar.nativeView.dismissSoftInput();
                 this.$refs.searchBar.nativeView.android.clearFocus();
             }
-            console.log(this.searchbarIsShown);
+            // console.log(this.searchbarIsShown);
         },
         onSubmit() {
             this.searchbarIsShown = false;
             this.$refs.searchBar.nativeView.dismissSoftInput();
             this.$refs.searchBar.nativeView.android.clearFocus();
-            console.log(this.searchPhrase)
+            // console.log(this.searchPhrase)
             this.current_country = this.searchPhrase
             this.goToOverview()
         },
         getTimeline(req) {
-            let data_string =
-                "https://image-charts.com/chart?chco=FFFFFF&chd=t:";
+            let data_string = "https://image-charts.com/chart?chco=FFFFFF&chd=t:";
             let data_points = [];
 
             http.getJSON(
                 `https://corona.lmao.ninja/v2/historical/${this.current_country}`
             )
             .then((result) => {
-                console.log("IMAGE REQUEST");
+                // console.log("IMAGE REQUEST");
                 // console.log(req)
                 // console.log(result.timeline[req])
                 let current_timeline = result.timeline[req];
@@ -166,7 +165,6 @@ export default {
                 // Put all points in array
                 for (var key in current_timeline) {
                     if (current_timeline.hasOwnProperty(key)) {
-                        // console.log(current_timeline[key]);
                         data_points.push(current_timeline[key]);
                     }
                 }

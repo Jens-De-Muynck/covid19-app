@@ -53,9 +53,6 @@
             }
         },
         methods:{
-            resetPassword() {
-                console.log("RESET PASSWORD")
-            },
             logOut(){
                 const firebase = require('nativescript-plugin-firebase')
                 firebase.logout()

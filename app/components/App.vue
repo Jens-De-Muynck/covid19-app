@@ -83,8 +83,8 @@
                     })
                     .then(
                         result => {
-                            console.log("SUCCES:")
-                            console.log(result)
+                            // console.log("SUCCES:")
+                            // console.log(result)
                             this.login_error = ""
 
                             this.$navigateTo(Overview, {

@@ -37,7 +37,7 @@
                             </FlexboxLayout>
 
                             <FlexboxLayout v-if='searchbarIsShown' class="searchbar_wrap">
-                                <SearchBar ref="searchBar" hint="Search hint" v-model="searchPhrase" @submit="onSubmit()"/>
+                                <SearchBar ref="searchBar" hint="Search country" v-model="searchPhrase" @submit="onSubmit()"/>
                             </FlexboxLayout>
                         </FlexboxLayout>
                         
@@ -136,7 +136,7 @@
                     this.$refs.searchBar.nativeView.dismissSoftInput()
                     this.$refs.searchBar.nativeView.android.clearFocus()
                 }
-                console.log(this.searchbarIsShown)
+                // console.log(this.searchbarIsShown)
             },
             onSubmit(){
                 this.searchbarIsShown = false;
@@ -146,8 +146,8 @@
                 this.goToOverview()
             },
             getWatchlist(){
-                console.log("CURRENT USER")
-                console.log(this.current_user.uid)
+                // console.log("CURRENT USER")
+                // console.log(this.current_user.uid)
                 const firebase = require('nativescript-plugin-firebase')
 
                 firebase.init({
@@ -175,7 +175,7 @@
                 .then(result => {
                     if(Object.keys(result.value).length !== 0){ // User bestaat
                     
-                        console.log("Query Succeeded:")
+                        // console.log("Query Succeeded:")
 
                         // Loop through all existing users
                         for (let i = 0; i < Object.keys(result.value).length; i++){
@@ -186,7 +186,7 @@
                                 country_arr.forEach(country_item => {
 
                                     // Get flag src
-                                    console.log("Searching Flag...");
+                                    // console.log("Searching Flag...");
 
                                     http.getJSON(`https://corona.lmao.ninja/v2/countries/${country_item}`)
                                     .then(result => {
@@ -199,7 +199,7 @@
 
                                         this.current_watchlist.push(current_country_data)
 
-                                        console.log(current_country_data);
+                                        // console.log(current_country_data);
                                     })
                                     .catch(error => console.log("API Error: " + error));
                                 });

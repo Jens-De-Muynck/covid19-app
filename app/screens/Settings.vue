@@ -76,7 +76,7 @@
         methods:{
             resetMyPassword() {                
                 const firebase = require("nativescript-plugin-firebase");
-                console.log('RESET PASSWORD')
+                // console.log('RESET PASSWORD')
                 this.resetPasswordText = "Coming soon"
                 setTimeout(() => this.resetPasswordText = "", 3500)
             },

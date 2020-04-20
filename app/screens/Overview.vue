@@ -37,7 +37,7 @@
                             </FlexboxLayout>
 
                             <FlexboxLayout v-if='searchbarIsShown' class="searchbar_wrap">
-                                <SearchBar ref="searchBar" hint="Search hint" v-model="searchPhrase" @submit="onSubmit()"/>
+                                <SearchBar ref="searchBar" hint="Search country" v-model="searchPhrase" @submit="onSubmit()"/>
                             </FlexboxLayout>
                         </FlexboxLayout>
                         
@@ -224,26 +224,12 @@
             numberWithCommas(x) { // add dividers to large numbers for better readability
                 return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".");
             },
-            handleWatchlist(calledOnLoad){
+            handleWatchlist(clientOnly){
                 // console.log('-- START HANDLING WATCHLIST --')
                 const firebase = require("nativescript-plugin-firebase");
                 let functionIsDone = false
 
                 firebase.init();
-                
-                if(calledOnLoad){
-                    // firebase.setValue( // DELETE ME
-                    //     `/users/${this.current_user.uid}`,
-                    //     {
-                    //         watchlist: [
-                    //             'belgium',
-                    //             'hungary',
-                    //             'france',
-                    //             'netherlands'
-                    //         ]
-                    //     }
-                    // );
-                }
 
                 firebase.getValue(`/users/${this.current_user.uid}/watchlist`)
                 .then(result => {
@@ -257,7 +243,7 @@
                         if(temp_watchlist[i][1] == this.current_country){
                             this.isInWatchlist = true
                     
-                            if(!calledOnLoad){
+                            if(!clientOnly){
                                 // Remove from db watchlist
                                 firebase.remove(`/users/${this.current_user.uid}/watchlist/${temp_watchlist[i][0]}`);
 
@@ -270,21 +256,25 @@
                         }
                     }
 
-                    if(!(this.isInWatchlist) && !calledOnLoad && !functionIsDone){
-                        this.isInWatchlist = true
+                    if(!(this.isInWatchlist) && !functionIsDone){
+                        this.isInWatchlist = false
 
-                        // Add to db watchlist
-                        firebase.push(
-                            `/users/${this.current_user.uid}/watchlist`,
-                            this.current_country
-                        ).then(
-                            function (result) {
-                                console.log("created key: " + result.key);
-                            }
-                        );
+                        if(!clientOnly){
+                            // Add to db watchlist
+                            firebase.push(
+                                `/users/${this.current_user.uid}/watchlist`,
+                                this.current_country
+                            ).then(
+                                function (result) {
+                                    // console.log("created key: " + result.key);
+                                }
+                            );
 
-                        // Add to local watchlist
-                        temp_watchlist.push(this.current_country)
+                            // Add to local watchlist
+                            temp_watchlist.push(this.current_country)
+
+                            this.isInWatchlist = true
+                        }
                     }
                 })
                 .catch(error => {
