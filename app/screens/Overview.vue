@@ -28,25 +28,25 @@
                         <Label class="WHO" text="World Health Organisation" @tap="gotoWebWHO()" />
                     </FlexboxLayout>
 
-                    <FlexboxLayout class="content" flexDirection="column" justifyContent="space-between" alignItems="center">
+                    <FlexboxLayout class="content">
                         <FlexboxLayout class="menu" flexDirection="column">
-                            <FlexboxLayout class="menu" flexDirection="row" justifyContent="space-between">                            
+                            <FlexboxLayout class="menu">                            
                                 <Image class="menu-icon" src="~/assets/images/menu.png" stretch="aspectFit" @tap="$refs.drawer.nativeView.showDrawer()" />
                                 <Image class="menu-icon" src="~/assets/images/search.png" stretch="aspectFit" @tap="toggleSearchbar()"/>
                                 <Image class="menu-icon" src="~/assets/images/settings.png" stretch="aspectFit" @tap="goToSettings()"/>
                             </FlexboxLayout>
 
                             <FlexboxLayout v-if='searchbarIsShown' class="searchbar_wrap">
-                                <SearchBar ref="searchBar" hint="Search hint" v-model="searchPhrase" @submit="onSubmit()" color="#1a223f" backgroundColor="white"/>
+                                <SearchBar ref="searchBar" hint="Search hint" v-model="searchPhrase" @submit="onSubmit()"/>
                             </FlexboxLayout>
                         </FlexboxLayout>
                         
-                        <FlexboxLayout class="title" justifyContent="space-between" width="100%" marginBottom="50px">
+                        <FlexboxLayout class="title">
                             <Label class="current_country" v-model="current_country" @tap="makeApiCall('belgium')">{{current_country}}</Label>
                             <Image :src="this.isInWatchlist ? '~/assets/images/eye-remove.png' : '~/assets/images/eye-add.png'" stretch="aspectFit" width="100px" @tap="handleWatchlist(false)"></Image>
                         </FlexboxLayout>
 
-                        <FlexboxLayout class="data-list" flexDirection="column" justifyContent="space-between">
+                        <FlexboxLayout class="data-list">
                             <FlexboxLayout class="data-item">
                                 <Label text="Cases"></Label>
                                 <Label class="dashed-line"></Label>
@@ -302,6 +302,9 @@
 <style scoped>
     .content{
         margin: 0% 5% 18% 5%;
+        flex-direction: column; 
+        justify-content: space-between;
+        align-items: center;
     }
 
     .searchbar_wrap{
@@ -313,20 +316,27 @@
 
     .searchbar_wrap *{
         font-size: 15rem;
+        color: #1a223f;
+        background-color: white;
     }
 
     .title{
         display: flex;
+        justify-content: space-between;
         align-self: flex-start;
         font-family: "Serenity", "Serenity-Medium";
         font-weight: bold;
         font-size: 45rem;
+        width: 100%;
+        margin-bottom: 50px;
     }
 
     .menu{
         width: 100%;
         height: 20%;
         margin-top: 5%;
+        flex-direction: row;
+        justify-content: space-between;
         align-items: flex-start;
     }
 
@@ -341,6 +351,8 @@
 
     .data-list{
         flex: 1;
+        flex-direction: column;
+        justify-content: space-between;
         font-family: 'Serenity', 'Serenity-ExtraLight';
         font-weight: 200;
         width: 100%;

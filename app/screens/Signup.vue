@@ -17,12 +17,12 @@
                         <Image src="~/assets/images/bg-shape.png" iosOverflowSafeArea="true" stretch="aspectFit" width="100%" rowSpan="3"></Image>
                     </FlexboxLayout>
 
-                    <FlexboxLayout class="content" flexDirection="column" justifyContent="space-between" alignItems="center">
+                    <FlexboxLayout class="content">
                         <StackLayout class="title">
                             <Label text="Get on board" />
                         </StackLayout>
 
-                        <FlexboxLayout class="signup-form" flexDirection="column">
+                        <FlexboxLayout class="signup-form">
                             <Label v-model="signup_error" :text="signup_error" class="signup_error" textWrap="true"/>
 
                             <TextField class="signup-name" v-model="signup_name" hint="Name" autocorrect="false" />
@@ -123,6 +123,9 @@
 <style scoped>
     .content{
         margin: 25% 5% 18% 5%;
+        flex-direction: column; 
+        justify-content: space-between;
+        align-items: center;
     }
 
     .title{
@@ -135,6 +138,7 @@
 
     .signup-form{
         width: 100%;
+        flex-direction: column;
     }
 
     .signup-form *{

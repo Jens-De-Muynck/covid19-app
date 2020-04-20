@@ -23,7 +23,7 @@
                             <Label text="welcome back" />
                         </StackLayout>
 
-                        <FlexboxLayout class="login-form" flexDirection="column">
+                        <FlexboxLayout class="login-form">
                             <Label v-model="login_error" :text="login_error" class="login_error" textWrap="true"/>
                             <TextField class="login-email" v-model="login_email" hint="E-mail" autocorrect="false" keyboardType="email" />
                             <TextField class="login-password" v-model="login_password" hint="Password" autocorrect="false" secure='true'/>
@@ -132,7 +132,8 @@
     }
 
     .login-form{
-        width: 100%;
+        width: 100%; 
+        flex-direction: column;
     }
 
     .login-form *{

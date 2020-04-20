@@ -3,163 +3,61 @@
         <RadSideDrawer ref="drawer">
             <StackLayout ~drawerContent backgroundColor="#ffffff">
                 <FlexboxLayout marginTop="4%" width="100%">
-                    <Image
-                        class="drawer-menu-icon"
-                        src="~/assets/images/menu-open.png"
-                        stretch="aspectFit"
-                        @tap="$refs.drawer.nativeView.closeDrawer()"
-                    />
+                    <Image class="drawer-menu-icon" src="~/assets/images/menu-open.png" stretch="aspectFit" @tap="$refs.drawer.nativeView.closeDrawer()" />
                 </FlexboxLayout>
 
                 <FlexboxLayout class="drawer-screens" flexDirection="column">
-                    <Label
-                        class="drawer-item"
-                        text="Overview"
-                        @tap="goToOverview()"
-                    />
-                    <Label
-                        class="drawer-item"
-                        text="Timeline"
-                        @tap="$refs.drawer.nativeView.closeDrawer()"
-                    />
-                    <Label
-                        class="drawer-item"
-                        text="Watchlist"
-                        @tap="goToWatchlist()"
-                    />
+                    <Label class="drawer-item" text="Overview" @tap="goToOverview()" />
+                    <Label class="drawer-item" text="Timeline" @tap="$refs.drawer.nativeView.closeDrawer()" />
+                    <Label class="drawer-item" text="Watchlist" @tap="goToWatchlist()" />
                 </FlexboxLayout>
 
                 <FlexboxLayout class="drawer-other" flexDirection="column">
-                    <Label
-                        class="drawer-item"
-                        text="Settings"
-                        @tap="goToSettings()"
-                    />
-                    <Label
-                        class="drawer-item"
-                        text="About"
-                        @tap="goToAbout()"
-                    />
+                    <Label class="drawer-item" text="Settings" @tap="goToSettings()" />
+                    <Label class="drawer-item" text="About" @tap="goToAbout()" />
                     <Label class="drawer-item" text="Log Out" @tap="logOut()" />
                 </FlexboxLayout>
             </StackLayout>
 
-            <FlexboxLayout
-                backgroundColor="#1A223F"
-                flexDirection="column"
-                ~mainContent
-            >
+            <FlexboxLayout backgroundColor="#1A223F" flexDirection="column" ~mainContent>
                 <GridLayout rows="*, auto, auto">
-                    <FlexboxLayout
-                        justifyContent="space-between"
-                        alignItems="center"
-                        flexDirection="column"
-                        height="100%"
-                    >
-                        <Image
-                            src="~/assets/images/bg-shape.png"
-                            iosOverflowSafeArea="true"
-                            stretch="aspectFit"
-                            width="101%"
-                            rowSpan="3"
-                        ></Image>
-                        <Label
-                            class="WHO"
-                            text="World Health Organisation"
-                            @tap="gotoWebWHO()"
-                        />
+                    <FlexboxLayout justifyContent="space-between" alignItems="center" flexDirection="column" height="100%" >
+                        <Image src="~/assets/images/bg-shape.png" iosOverflowSafeArea="true" stretch="aspectFit" width="101%" rowSpan="3" ></Image>
+                        <Label class="WHO" text="World Health Organisation" @tap="gotoWebWHO()" />
                     </FlexboxLayout>
 
-                    <FlexboxLayout
-                        class="content"
-                        flexDirection="column"
-                        justifyContent="space-between"
-                        alignItems="center"
-                    >
+                    <FlexboxLayout class="content">
                         <FlexboxLayout class="menu" flexDirection="column">
-                            <FlexboxLayout
-                                class="menu"
-                                flexDirection="row"
-                                justifyContent="space-between"
-                            >
-                                <Image
-                                    class="menu-icon"
-                                    src="~/assets/images/menu.png"
-                                    stretch="aspectFit"
-                                    @tap="$refs.drawer.nativeView.showDrawer()"
-                                />
-                                <Image
-                                    class="menu-icon"
-                                    src="~/assets/images/search.png"
-                                    stretch="aspectFit"
-                                    @tap="toggleSearchbar()"
-                                />
-                                <Image
-                                    class="menu-icon"
-                                    src="~/assets/images/settings.png"
-                                    stretch="aspectFit"
-                                    @tap="goToSettings()"
-                                />
+                            <FlexboxLayout class="menu" flexDirection="row" justifyContent="space-between" >
+                                <Image class="menu-icon" src="~/assets/images/menu.png" stretch="aspectFit" @tap="$refs.drawer.nativeView.showDrawer()" />
+                                <Image class="menu-icon" src="~/assets/images/search.png" stretch="aspectFit" @tap="toggleSearchbar()" />
+                                <Image class="menu-icon" src="~/assets/images/settings.png" stretch="aspectFit" @tap="goToSettings()"/>
                             </FlexboxLayout>
 
-                            <FlexboxLayout
-                                v-if="searchbarIsShown"
-                                class="searchbar_wrap"
-                            >
+                            <FlexboxLayout v-if="searchbarIsShown" class="searchbar_wrap">
                                 <SearchBar ref="searchBar" hint="Search hint" v-model="searchPhrase" @submit="onSubmit()" color="#1a223f" backgroundColor="white"/>
                             </FlexboxLayout>
                         </FlexboxLayout>
 
-                        <FlexboxLayout
-                            class="title"
-                            justifyContent="space-between"
-                            width="100%"
-                            marginBottom="50px"
-                        >
+                        <FlexboxLayout class="title">
                             <Label text="Timeline" />
-                            <Image
-                                src="~/assets/images/heart-true.png"
-                                stretch="aspectFit"
-                                width="100px"
-                            ></Image>
+                            <Image src="~/assets/images/heart-true.png" stretch="aspectFit" width="100px"></Image>
                         </FlexboxLayout>
 
-                        <FlexboxLayout
-                            class="data-list"
-                            flexDirection="column"
-                            justifyContent="space-between"
-                        >
-                            <FlexboxLayout
-                                class="data-item"
-                                flexDirection="column"
-                            >
+                        <FlexboxLayout class="data-list">
+                            <FlexboxLayout class="data-item">
                                 <Label text="Cases"></Label>
-                                <Image
-                                    :src="timeline_cases"
-                                    stretch="aspectFit"
-                                />
+                                <Image :src="timeline_cases" stretch="aspectFit"/>
                             </FlexboxLayout>
 
-                            <FlexboxLayout
-                                class="data-item"
-                                flexDirection="column"
-                            >
+                            <FlexboxLayout class="data-item">
                                 <Label text="Deaths"></Label>
-                                <Image
-                                    :src="timeline_deaths"
-                                    stretch="aspectFit"
-                                />
+                                <Image :src="timeline_deaths" stretch="aspectFit"/>
                             </FlexboxLayout>
 
-                            <FlexboxLayout
-                                class="data-item"
-                                flexDirection="column"
-                            >
+                            <FlexboxLayout class="data-item">
                                 <Label text="Recovered"></Label>
-                                <Image
-                                    :src="timeline_recovered"
-                                    stretch="aspectFit"
-                                />
+                                <Image :src="timeline_recovered" stretch="aspectFit"/>
                             </FlexboxLayout>
                         </FlexboxLayout>
                     </FlexboxLayout>
@@ -309,6 +207,9 @@ export default {
 <style scoped>
 .content {
     margin: 0% 5% 18% 5%;
+    flex-direction: column; 
+    justify-content: space-between;
+    align-items: center;
 }
 
 .searchbar_wrap {
@@ -324,10 +225,13 @@ export default {
 
 .title {
     display: flex;
+    justify-content: space-between;
     align-self: flex-start;
     font-family: "Serenity", "Serenity-Medium";
     font-weight: bold;
     font-size: 45rem;
+    width: 100%;
+    margin-bottom: 50px;
 }
 
 .menu {
@@ -344,6 +248,8 @@ export default {
 
 .data-list {
     flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
     font-family: "Serenity", "Serenity-ExtraLight";
     font-weight: 200;
     width: 100%;
@@ -351,6 +257,7 @@ export default {
 
 .data-item {
     font-size: 30rem;
+    flex-direction: column;
 }
 
 .dashed-line {

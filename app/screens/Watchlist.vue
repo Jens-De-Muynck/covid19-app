@@ -28,30 +28,29 @@
                         <Label class="WHO" text="World Health Organisation" @tap="gotoWebWHO()" />
                     </FlexboxLayout>
 
-                    <FlexboxLayout class="content" flexDirection="column" justifyContent="space-between" alignItems="center">
+                    <FlexboxLayout class="content">
                         <FlexboxLayout class="menu" flexDirection="column">
-                            <FlexboxLayout class="menu" flexDirection="row" justifyContent="space-between">                            
+                            <FlexboxLayout class="menu">                            
                                 <Image class="menu-icon" src="~/assets/images/menu.png" stretch="aspectFit" @tap="$refs.drawer.nativeView.showDrawer()" />
                                 <Image class="menu-icon" src="~/assets/images/search.png" stretch="aspectFit" @tap="toggleSearchbar()"/>
                                 <Image class="menu-icon" src="~/assets/images/settings.png" stretch="aspectFit" @tap="goToSettings()"/>
                             </FlexboxLayout>
 
                             <FlexboxLayout v-if='searchbarIsShown' class="searchbar_wrap">
-                                <SearchBar ref="searchBar" hint="Search hint" v-model="searchPhrase" @submit="onSubmit()" color="#1a223f" backgroundColor="white"/>
+                                <SearchBar ref="searchBar" hint="Search hint" v-model="searchPhrase" @submit="onSubmit()"/>
                             </FlexboxLayout>
                         </FlexboxLayout>
                         
-                        <FlexboxLayout class="title" justifyContent="space-between" width="100%" marginBottom="50px">
+                        <FlexboxLayout class="title">
                             <Label text="Watchlist" />
                             <Image src="~/assets/images/heart-true.png" stretch="aspectFit" width="100px"></Image>
                         </FlexboxLayout>
 
-                        <FlexboxLayout class="data-list" flexDirection="column">
-                            
+                        <FlexboxLayout class="data-list">
                             <FlexboxLayout class="data-item" v-for='country in this.current_watchlist' :key="country" @tap="tappedWatchlistItem(country)">
-                                <Image :src="country.flag" width="80px" class="country-flag"></Image>
+                                <Image :src="country.flag" class="country-flag"></Image>
                                 <Label class="country-name">{{country.name}}</Label>
-                                <Image src="~/assets/images/back-arrow.png" width="30px" class="country-arrow"></Image>
+                                <Image src="~/assets/images/back-arrow.png" class="country-arrow"></Image>
                             </FlexboxLayout>
                         </FlexboxLayout>
                     </FlexboxLayout>
@@ -226,103 +225,122 @@
 </script>
 
 <style scoped>
-    .content{
-        margin: 0% 5% 18% 5%;
-    }
+.content{
+    margin: 0% 5% 18% 5%;
+    flex-direction: column; 
+    justify-content: space-between;
+    align-items: center;
+}
 
-    .searchbar_wrap{
-        flex: 1;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-    }
+.searchbar_wrap{
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
 
-    .searchbar_wrap *{
-        font-size: 15rem;
-    }
+.searchbar_wrap *{
+    font-size: 15rem;
+    color: #1a223f;
+    background-color: white;
+}
 
-    .title{
-        display: flex;
-        align-self: flex-start;
-        font-family: "Serenity", "Serenity-Medium";
-        font-weight: bold;
-        font-size: 45rem;
-    }
+.title{
+    display: flex;
+    justify-content: space-between;
+    align-self: flex-start;
+    font-family: "Serenity", "Serenity-Medium";
+    font-weight: bold;
+    font-size: 45rem;
+    width: 100%;
+    margin-bottom: 50px;
+}
 
-    .menu{
-        width: 100%;
-        height: 20%;
-        margin-top: 5%;
-        align-items: flex-start;
-    }
+.menu{
+    width: 100%;
+    height: 20%;
+    margin-top: 5%;
+    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+}
 
-    .menu-icon{
-        width: 70px;
-        height: 70px;
-    }
+.menu-icon{
+    width: 70px;
+    height: 70px;
+}
 
-    .data-list{
-        flex: 1;
-        font-family: 'Serenity', 'Serenity-ExtraLight';
-        font-weight: 200;
-        width: 100%;
-    }
+.data_scroller_wrap{
+    flex: 1;
+}
 
-    .data-item{
-        background-color: rgba(0, 0, 0, 0.25);
-        display: flex;
-        align-items: center;
-        font-size: 24rem;
-        padding: 20px 35px;
-        margin-bottom: 30px;
-    }
+.data-list{
+    flex: 1;
+    font-family: 'Serenity', 'Serenity-ExtraLight';
+    font-weight: 200;
+    width: 100%;
+    flex-direction: column;
+}
 
-    .country-flag{
-        border-width: 1px;
-        border-color: rgba(255, 255, 255, 0.55);
-        border-style: solid;
-    }
+.data_scroller{}
 
-    .country-name{
-        text-transform: capitalize;
-        flex: 1;
-        padding-left: 30px;
-    }
+.data-item{
+    background-color: rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    font-size: 24rem;
+    padding: 20px 35px;
+    margin-bottom: 30px;
+}
 
-    .country-arrow{
-        transform: rotate(180deg);
-    }
+.country-flag{
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.55);
+    border-style: solid;
+    width: 80px;
+}
 
-    .dashed-line{
-        flex: 1;
-        border-bottom-color: rgba(100, 100, 100, 0.25);
-        border-bottom-width: 5px;
-    }
+.country-name{
+    text-transform: capitalize;
+    flex: 1;
+    padding-left: 30px;
+}
 
-    .WHO{
-        margin-bottom: 50px;
-        text-decoration: underline;
-    }
+.country-arrow{
+    transform: rotate(180deg);
+    width: 30px;
+}
 
-    .drawer-menu-icon{
-        width: 75px;
-        margin-left: 16;
-        margin-bottom: 30;
-    }
+.dashed-line{
+    flex: 1;
+    border-bottom-color: rgba(100, 100, 100, 0.25);
+    border-bottom-width: 5px;
+}
 
-    .drawer-item {
-        padding: 8 16;
-        color: #1a223f;
-        font-size: 26;
-        font-family: 'Serenity', 'Serenity-DemiBold';
-        font-weight: 600;
-    }
-    
-    .drawer-screens,.drawer-other{
-        margin-top: 35;
-    }
+.WHO{
+    margin-bottom: 50px;
+    text-decoration: underline;
+}
 
-    #active{
-        background-color: red;
-    }
+.drawer-menu-icon{
+    width: 75px;
+    margin-left: 16;
+    margin-bottom: 30;
+}
+
+.drawer-item {
+    padding: 8 16;
+    color: #1a223f;
+    font-size: 26;
+    font-family: 'Serenity', 'Serenity-DemiBold';
+    font-weight: 600;
+}
+
+.drawer-screens,.drawer-other{
+    margin-top: 35;
+}
+
+#active{
+    background-color: red;
+}
 </style>
